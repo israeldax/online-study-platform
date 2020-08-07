@@ -2,35 +2,57 @@ import React from 'react'
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
 
+import api from '../../services/api'
+
 import './style.css'
 
-const TeacherItem: React.FC = () => {
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+
+  function createNewConnection() {
+    api.post('connections', { user_id: teacher.id })
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img src="https://avatars0.githubusercontent.com/u/12749258?s=460&u=ef18ba2f622fedccf82c2b39d952124a468d7c36&v=4" alt="" />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>IsraelDax</strong>
-          <span>Music</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
 
-      <p>
-        Music lover and teacher
-            <br />
-        <br />
-        As a private music teacher you'll combine your musical and teaching ability to provide music lessons to teach pupils to play a musical instrument or to sing.
-          </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Price/Hour
-              <strong>US$ 40,00</strong>
-          <button type="button">
-            <img src={whatsappIcon} alt="whatsapp" />
-                Contact
-              </button>
+          <strong>US${teacher.cost},00</strong>
         </p>
+
+        <a
+          target="_blank"
+          onClick={createNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+          type="button">
+
+          <img src={whatsappIcon} alt="WhatsApp" />
+          Get in touch
+        </a>
       </footer>
     </article>
   )
